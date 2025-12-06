@@ -18,6 +18,7 @@ var LEVELS = [
 
 # Paths to external scenes
 var MAIN_MENU_PATH = "res://Scenes/UI/MainMenu.tscn"
+var START_MENU_PATH = "res://Scenes/UI/start_menu.tscn"
 var SETTINGS_MENU_PATH = "res://Scenes/UI/settings_menu.tscn"
 var PLAYER_PATH = "res://Scenes/Characters/Player.tscn"
 
@@ -93,11 +94,104 @@ func load_main_menu() -> void:
 	# --------------------------------------------------------
 	# 3. Connect menu signals to Main handlers
 	# --------------------------------------------------------
-	menu_scene.start_pressed.connect(start_game)
+	menu_scene.start_pressed.connect(on_start_pressed)
 	menu_scene.settings_pressed.connect(on_settings_pressed)
 	menu_scene.quit_pressed.connect(on_quit_pressed)
 
 	print("MainMenu loaded successfully")
+
+
+func on_start_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle start request from MainMenu
+	# --------------------------------------------------------
+	print("Start menu requested")
+	load_start_menu()
+
+
+func on_settings_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle settings request from MainMenu
+	# --------------------------------------------------------
+	print("Settings menu requested")
+	load_settings_menu()
+
+
+func on_quit_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle quit request from MainMenu
+	# --------------------------------------------------------
+	print("Quit game requested")
+	get_tree().quit()
+
+
+func load_start_menu() -> void:
+	# --------------------------------------------------------
+	# 1. Remove current scene (main menu)
+	# --------------------------------------------------------
+	if current_scene:
+		current_scene.queue_free()
+
+	# --------------------------------------------------------
+	# 2. Instance the start menu under the UI layer
+	# --------------------------------------------------------
+	var start_menu_scene = load(START_MENU_PATH).instantiate()
+	ui.add_child(start_menu_scene)
+	current_scene = start_menu_scene
+	
+	# --------------------------------------------------------
+	# 3. Connect start menu signals to Main handlers
+	# --------------------------------------------------------
+	start_menu_scene.back_pressed.connect(on_start_back_pressed)
+	start_menu_scene.start_continue_pressed.connect(on_start_continue_pressed)
+
+	print("Start menu loaded successfully")
+
+
+func on_start_back_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle back request from StartMenu
+	# --------------------------------------------------------
+	print("Returning to main menu from start menu")
+	load_main_menu()
+
+
+func on_start_continue_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle start/continue request from StartMenu
+	# --------------------------------------------------------
+	print("Starting level 1 from start menu")
+	start_game()
+
+
+func load_settings_menu() -> void:
+	# --------------------------------------------------------
+	# 1. Remove current scene (main menu)
+	# --------------------------------------------------------
+	if current_scene:
+		current_scene.queue_free()
+
+	# --------------------------------------------------------
+	# 2. Instance the settings menu under the UI layer
+	# --------------------------------------------------------
+	var settings_scene = load(SETTINGS_MENU_PATH).instantiate()
+	ui.add_child(settings_scene)
+	current_scene = settings_scene
+	
+	# --------------------------------------------------------
+	# 3. Connect settings menu signals to Main handlers
+	# --------------------------------------------------------
+	settings_scene.back_pressed.connect(on_settings_back_pressed)
+
+	print("Settings menu loaded successfully")
+
+
+func on_settings_back_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle back request from SettingsMenu
+	# --------------------------------------------------------
+	print("Returning to main menu from settings")
+	load_main_menu()
 
 
 func start_game() -> void:
@@ -130,55 +224,23 @@ func load_level(index: int) -> void:
 	current_scene = level_scene
 
 	# --------------------------------------------------------
-	# 3. Load and spawn the Player inside the World
+	# 3. Find the "Spawn" node position in the level
+	# --------------------------------------------------------
+	var spawn_position = Vector2.ZERO
+	var spawn_node = level_scene.get_node_or_null("Spawn")
+	
+	if spawn_node:
+		spawn_position = spawn_node.global_position
+		print("Found spawn node at position: ", spawn_position)
+	else:
+		print("No spawn node found in level. Using default position (0, 0).")
+		spawn_position = Vector2.ZERO
+
+	# --------------------------------------------------------
+	# 4. Load and spawn the Player at spawn position
 	# --------------------------------------------------------
 	var player_instance = load(PLAYER_PATH).instantiate()
+	player_instance.global_position = spawn_position
 	world.add_child(player_instance)
 
-	print("Level ", index + 1, " loaded")
-
-
-func on_settings_pressed() -> void:
-	# --------------------------------------------------------
-	# Handle settings request from MainMenu
-	# --------------------------------------------------------
-	print("Settings menu requested")
-	load_settings_menu()
-
-
-func on_quit_pressed() -> void:
-	# --------------------------------------------------------
-	# Handle quit request from MainMenu
-	# --------------------------------------------------------
-	print("Quit game requested")
-	get_tree().quit()
-
-
-func load_settings_menu() -> void:
-	# --------------------------------------------------------
-	# 1. Remove current scene (main menu)
-	# --------------------------------------------------------
-	if current_scene:
-		current_scene.queue_free()
-
-	# --------------------------------------------------------
-	# 2. Instance the settings menu under the UI layer
-	# --------------------------------------------------------
-	var settings_scene = load(SETTINGS_MENU_PATH).instantiate()
-	ui.add_child(settings_scene)
-	current_scene = settings_scene
-	
-	# --------------------------------------------------------
-	# 3. Connect settings menu signals to Main handlers
-	# --------------------------------------------------------
-	settings_scene.back_pressed.connect(on_settings_back_pressed)
-
-	print("Settings menu loaded successfully")
-
-
-func on_settings_back_pressed() -> void:
-	# --------------------------------------------------------
-	# Handle back request from SettingsMenu
-	# --------------------------------------------------------
-	print("Returning to main menu")
-	load_main_menu()
+	print("Level ", index + 1, " loaded with player at spawn position")

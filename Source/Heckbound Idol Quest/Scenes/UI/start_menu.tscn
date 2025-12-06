@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://dc6kd6u3ou81n"]
+
+[ext_resource type="Script" uid="uid://dnnp2i0idx7fv" path="res://Scripts/UI/start_menu.gd" id="1_xry01"]
+
+[node name="StartMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_xry01")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 201.0
+offset_top = 140.0
+offset_right = 241.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Start _Continue" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "START"
+
+[node name="Level Select" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "LEVEL SELECT"
+
+[node name="Back" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Start _Continue" to="." method="_on_start__continue_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Level Select" to="." method="_on_level_select_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Back" to="." method="_on_back_pressed"]
