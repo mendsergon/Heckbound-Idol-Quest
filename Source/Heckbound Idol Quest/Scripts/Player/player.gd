@@ -6,14 +6,14 @@ extends CharacterBody2D
 # Movement constants
 const SPEED = 150.0
 const JUMP_VELOCITY = -350.0
+# Small threshold to consider the character as "stopped"
+const STOP_THRESHOLD = 5.0
 
 func _physics_process(delta: float) -> void:
 	# -----------------------------
 	# 1. Apply gravity if not on floor
 	# -----------------------------
 	if not is_on_floor():
-		# get_gravity() returns the current gravity vector
-		# Multiply by delta to scale gravity per frame
 		velocity += get_gravity() * delta
 
 	# -----------------------------
@@ -26,13 +26,14 @@ func _physics_process(delta: float) -> void:
 	# 3. Handle horizontal movement
 	# -----------------------------
 	var direction := Input.get_axis("left", "right") # -1 for left, 1 for right, 0 for no input
+	var is_moving := direction != 0
 
-	if direction != 0:
+	if is_moving:
 		# Set horizontal velocity based on input
 		velocity.x = direction * SPEED
 		
 		# Play walking animation if on floor
-		if is_on_floor() and animated_sprite_2d.animation != "Walk":
+		if is_on_floor():
 			animated_sprite_2d.play("Walk")
 		
 		# Flip the sprite based on movement direction
@@ -41,10 +42,6 @@ func _physics_process(delta: float) -> void:
 		# Gradually reduce horizontal velocity when no input
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
-		# Play idle animation if on floor
-		if is_on_floor() and animated_sprite_2d.animation != "Idle":
-			animated_sprite_2d.play("Idle")
-
 	# -----------------------------
 	# 4. Handle animation for jumping/falling
 	# -----------------------------
@@ -52,6 +49,11 @@ func _physics_process(delta: float) -> void:
 		# Play jump animation when in the air
 		if animated_sprite_2d.animation != "Jump":
 			animated_sprite_2d.play("Jump")
+	else:
+		# Only go to idle when completely stopped (or nearly stopped) AND not moving
+		if not is_moving and abs(velocity.x) < STOP_THRESHOLD:
+			if animated_sprite_2d.animation != "Idle":
+				animated_sprite_2d.play("Idle")
 
 	# -----------------------------
 	# 5. Apply movement
