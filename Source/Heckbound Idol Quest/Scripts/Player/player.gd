@@ -4,7 +4,7 @@ extends CharacterBody2D
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
 # Movement constants
-const SPEED = 150.0
+const SPEED = 135.0
 const JUMP_VELOCITY = -350.0
 # Small threshold to consider the character as "stopped"
 const STOP_THRESHOLD = 5.0
