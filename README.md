@@ -1,4 +1,4 @@
-# Heckbound Idol Quest 🎮👹✨
+# Heckbound Idol Quest 
 
 A mischievous red Imp embarks on a chaotic journey from Hell to Earth and finally Heaven, all to get an autograph from an angel idol. Navigate whimsical worlds, dodge cute monsters, and solve playful puzzles in this humorous pixel platformer adventure.
 
