@@ -18,6 +18,7 @@ var LEVELS = [
 
 # Paths to external scenes
 var MAIN_MENU_PATH = "res://Scenes/UI/MainMenu.tscn"
+var SETTINGS_MENU_PATH = "res://Scenes/UI/settings_menu.tscn"
 var PLAYER_PATH = "res://Scenes/Characters/Player.tscn"
 
 
@@ -93,6 +94,7 @@ func load_main_menu() -> void:
 	# 3. Connect menu signals to Main handlers
 	# --------------------------------------------------------
 	menu_scene.start_pressed.connect(start_game)
+	menu_scene.settings_pressed.connect(on_settings_pressed)
 	menu_scene.quit_pressed.connect(on_quit_pressed)
 
 	print("MainMenu loaded successfully")
@@ -136,9 +138,47 @@ func load_level(index: int) -> void:
 	print("Level ", index + 1, " loaded")
 
 
+func on_settings_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle settings request from MainMenu
+	# --------------------------------------------------------
+	print("Settings menu requested")
+	load_settings_menu()
+
+
 func on_quit_pressed() -> void:
 	# --------------------------------------------------------
 	# Handle quit request from MainMenu
 	# --------------------------------------------------------
 	print("Quit game requested")
 	get_tree().quit()
+
+
+func load_settings_menu() -> void:
+	# --------------------------------------------------------
+	# 1. Remove current scene (main menu)
+	# --------------------------------------------------------
+	if current_scene:
+		current_scene.queue_free()
+
+	# --------------------------------------------------------
+	# 2. Instance the settings menu under the UI layer
+	# --------------------------------------------------------
+	var settings_scene = load(SETTINGS_MENU_PATH).instantiate()
+	ui.add_child(settings_scene)
+	current_scene = settings_scene
+	
+	# --------------------------------------------------------
+	# 3. Connect settings menu signals to Main handlers
+	# --------------------------------------------------------
+	settings_scene.back_pressed.connect(on_settings_back_pressed)
+
+	print("Settings menu loaded successfully")
+
+
+func on_settings_back_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle back request from SettingsMenu
+	# --------------------------------------------------------
+	print("Returning to main menu")
+	load_main_menu()
