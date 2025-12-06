@@ -88,6 +88,12 @@ func load_main_menu() -> void:
 	var menu_scene = load(MAIN_MENU_PATH).instantiate()
 	ui.add_child(menu_scene)
 	current_scene = menu_scene
+	
+	# --------------------------------------------------------
+	# 3. Connect menu signals to Main handlers
+	# --------------------------------------------------------
+	menu_scene.start_pressed.connect(start_game)
+	menu_scene.quit_pressed.connect(on_quit_pressed)
 
 	print("MainMenu loaded successfully")
 
@@ -128,3 +134,11 @@ func load_level(index: int) -> void:
 	world.add_child(player_instance)
 
 	print("Level ", index + 1, " loaded")
+
+
+func on_quit_pressed() -> void:
+	# --------------------------------------------------------
+	# Handle quit request from MainMenu
+	# --------------------------------------------------------
+	print("Quit game requested")
+	get_tree().quit()
