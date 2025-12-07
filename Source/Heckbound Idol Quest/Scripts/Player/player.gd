@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 # Movement constants
 const SPEED = 135.0
-const JUMP_VELOCITY = -350.0
+const JUMP_VELOCITY = -300.0
 # Small threshold to consider the character as "stopped"
 const STOP_THRESHOLD = 5.0
 
