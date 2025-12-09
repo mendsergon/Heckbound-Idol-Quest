@@ -2,9 +2,13 @@ extends Node2D
 
 @onready var camera_2d: Camera2D = $Camera2D
 
-# Variable to store player reference
+# Variables
 var player: Node2D = null
+var max_health: int = 3
+var health: int = max_health
 
+# Signals
+signal died
 
 func _ready() -> void:
 	# --------------------------------------------------------
@@ -55,6 +59,11 @@ func find_player_and_attach_camera():
 		print("ERROR: Could not find player in level!")
 		# Keep camera as-is in level (static camera)
 
+func take_damage(amount: int) -> void:
+	health -= amount
+	if health <= 0:
+		health = 0
+		emit_signal("died") # Tell main the player is dead
 
 func _process(delta: float) -> void:
 	pass
