@@ -6,6 +6,7 @@ extends Node2D
 var player: Node2D = null
 var max_health: int = 3
 var health: int = max_health
+var initial_camera_y: float = 0.0  # Store initial camera Y position
 
 # Signals
 signal died
@@ -16,6 +17,11 @@ func _ready() -> void:
 	# --------------------------------------------------------
 	await get_tree().process_frame
 	await get_tree().process_frame  # Wait 2 frames to be sure
+	
+	# --------------------------------------------------------
+	# Store initial camera Y position
+	# --------------------------------------------------------
+	initial_camera_y = camera_2d.global_position.y
 	
 	# --------------------------------------------------------
 	# Find the player that was spawned into this level
@@ -39,22 +45,13 @@ func find_player_and_attach_camera():
 				break
 	
 	# --------------------------------------------------------
-	# 2. If found, attach camera to player
+	# 2. If found, make camera active
 	# --------------------------------------------------------
 	if player:
-		# Remove camera from level scene
-		remove_child(camera_2d)
-		
-		# Add camera as child of player
-		player.add_child(camera_2d)
-		
-		# Reset camera position relative to player (center on them)
-		camera_2d.position = Vector2.ZERO
-		
 		# Make this camera active
 		camera_2d.make_current()
 		
-		print("Camera attached to player")
+		print("Camera following player horizontally")
 	else:
 		print("ERROR: Could not find player in level!")
 		# Keep camera as-is in level (static camera)
@@ -66,4 +63,12 @@ func take_damage(amount: int) -> void:
 		emit_signal("died") # Tell main the player is dead
 
 func _process(delta: float) -> void:
-	pass
+	# --------------------------------------------------------
+	# Update camera position to follow player horizontally only
+	# --------------------------------------------------------
+	if player:
+		var player_pos = player.global_position
+		var camera_pos = camera_2d.global_position
+		
+		# Update only X position, keep Y at initial position
+		camera_2d.global_position = Vector2(player_pos.x, initial_camera_y)
