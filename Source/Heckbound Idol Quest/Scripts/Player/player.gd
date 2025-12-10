@@ -9,6 +9,13 @@ const JUMP_VELOCITY = -300.0
 # Small threshold to consider the character as "stopped"
 const STOP_THRESHOLD = 5.0
 
+# Health variables
+var max_health: int = 3
+var health: int = max_health
+
+# Signals
+signal died
+
 func _physics_process(delta: float) -> void:
 	# -----------------------------
 	# 1. Apply gravity if not on floor
@@ -59,3 +66,9 @@ func _physics_process(delta: float) -> void:
 	# 5. Apply movement
 	# -----------------------------
 	move_and_slide()
+
+func take_damage(amount: int) -> void:
+	health -= amount
+	if health <= 0:
+		health = 0
+		emit_signal("died") # Tell main the player is dead
