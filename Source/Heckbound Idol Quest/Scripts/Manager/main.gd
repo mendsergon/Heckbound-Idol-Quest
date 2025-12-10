@@ -11,6 +11,9 @@ var audio_player: AudioStreamPlayer2D
 # Pointer to whichever scene is currently active
 var current_scene: Node = null
 
+# Track current level index
+var current_level_index: int = 0
+
 # List of levels — expandable later
 var LEVELS = [
 	"res://Scenes/Levels/Hell/Level_1.tscn"
@@ -203,9 +206,14 @@ func start_game() -> void:
 		current_scene = null
 
 	# --------------------------------------------------------
-	# 2. Load the first level in LEVELS[]
+	# 2. Reset level index to 0 for new game
 	# --------------------------------------------------------
-	load_level(0)
+	current_level_index = 0
+	
+	# --------------------------------------------------------
+	# 3. Load the first level in LEVELS[]
+	# --------------------------------------------------------
+	load_level(current_level_index)
 
 
 func load_level(index: int) -> void:
@@ -214,17 +222,30 @@ func load_level(index: int) -> void:
 	# --------------------------------------------------------
 	if index < 0 or index >= LEVELS.size():
 		print("Invalid level index")
+		# If no valid level, return to main menu
+		load_main_menu()
 		return
 
 	# --------------------------------------------------------
-	# 2. Load the level and add it inside World node
+	# 2. Update current level index
+	# --------------------------------------------------------
+	current_level_index = index
+
+	# --------------------------------------------------------
+	# 3. Clear the World node of any existing children
+	# --------------------------------------------------------
+	for child in world.get_children():
+		child.queue_free()
+
+	# --------------------------------------------------------
+	# 4. Load the level and add it inside World node
 	# --------------------------------------------------------
 	var level_scene = load(LEVELS[index]).instantiate()
 	world.add_child(level_scene)
 	current_scene = level_scene
 
 	# --------------------------------------------------------
-	# 3. Find the "Spawn" node position in the level
+	# 5. Find the "Spawn" node position in the level
 	# --------------------------------------------------------
 	var spawn_position = Vector2.ZERO
 	var spawn_node = level_scene.get_node_or_null("Spawn")
@@ -237,10 +258,51 @@ func load_level(index: int) -> void:
 		spawn_position = Vector2.ZERO
 
 	# --------------------------------------------------------
-	# 4. Load and spawn the Player at spawn position
+	# 6. Load and spawn the Player at spawn position
 	# --------------------------------------------------------
 	var player_instance = load(PLAYER_PATH).instantiate()
 	player_instance.global_position = spawn_position
 	world.add_child(player_instance)
 
 	print("Level ", index + 1, " loaded with player at spawn position")
+	
+	# --------------------------------------------------------
+	# 7. Optionally: Connect player death signal or level completion signal
+	# --------------------------------------------------------
+	# Example: player_instance.died.connect(_on_player_died)
+	# Example: level_scene.level_completed.connect(_on_level_completed)
+
+
+# --------------------------------------------------------
+# Helper test functions I might use:
+# --------------------------------------------------------
+
+func next_level() -> void:
+	# --------------------------------------------------------
+	# Load the next level when current level is completed
+	# --------------------------------------------------------
+	current_level_index += 1
+	if current_level_index < LEVELS.size():
+		load_level(current_level_index)
+	else:
+		print("Game completed! Returning to main menu.")
+		load_main_menu()
+
+
+func restart_level() -> void:
+	# --------------------------------------------------------
+	# Restart the current level 
+	# --------------------------------------------------------
+	load_level(current_level_index)
+
+
+func return_to_main_menu() -> void:
+	# --------------------------------------------------------
+	# Clean up level and return to main menu
+	# --------------------------------------------------------
+	# Clean up world contents
+	for child in world.get_children():
+		child.queue_free()
+	
+	# Load main menu
+	load_main_menu()
