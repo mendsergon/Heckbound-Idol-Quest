@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://hab607seti3n"]
+
+[ext_resource type="Texture2D" uid="uid://coh3hw2b4nuxm" path="res://Assets/Sprites/Tilesets/Utils/button0.png" id="1_j4v24"]
+[ext_resource type="Script" uid="uid://camrddcafedrg" path="res://Scripts/Utilities/button_0.gd" id="1_p3q8w"]
+[ext_resource type="PackedScene" uid="uid://duad1pphaffw1" path="res://Scenes/Props/interaction_area.tscn" id="3_jojrh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ionhx"]
+atlas = ExtResource("1_j4v24")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3q8w"]
+atlas = ExtResource("1_j4v24")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jojrh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ionhx")
+}],
+"loop": true,
+"name": &"Off",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p3q8w")
+}],
+"loop": true,
+"name": &"On",
+"speed": 5.0
+}]
+
+[node name="Button0" type="Node2D"]
+script = ExtResource("1_p3q8w")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_jojrh")
+animation = &"Off"
+
+[node name="InteractionArea" parent="." instance=ExtResource("3_jojrh")]
+scale = Vector2(0.75, 0.75)
+
+[connection signal="interacted" from="InteractionArea" to="." method="_on_interaction_area_interacted"]

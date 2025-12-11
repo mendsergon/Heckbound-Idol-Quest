@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://duad1pphaffw1"]
+
+[ext_resource type="Script" uid="uid://btgl24252vurv" path="res://Scripts/Utilities/interaction_area.gd" id="1_jt748"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8we8d"]
+radius = 22.0
+
+[node name="InteractionArea" type="Area2D"]
+script = ExtResource("1_jt748")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_8we8d")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 2.0
+offset_top = -17.0
+offset_right = 42.0
+offset_bottom = 6.0
+theme_override_font_sizes/font_size = 10
+text = "[X]"
