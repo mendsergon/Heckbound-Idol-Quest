@@ -44,6 +44,7 @@ func _on_interaction_area_interacted() -> void:
 		# --------------------------------------------------------
 		sprite_2d.play("Off")
 		is_on = false
+		emit_signal("button_turned_on")
 
 
 # --------------------------------------------------------

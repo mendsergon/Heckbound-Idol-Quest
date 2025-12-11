@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=4 uid="uid://dfn3u1cgi3xqn"]
+[gd_scene load_steps=11 format=4 uid="uid://dfn3u1cgi3xqn"]
 
 [ext_resource type="Script" uid="uid://bm7l3hmt3e5dq" path="res://Scripts/Levels/Hell/level_1.gd" id="1_0mnx2"]
 [ext_resource type="Texture2D" uid="uid://b4tmqar2rl487" path="res://Assets/Sprites/Tilesets/Metro/Metro1.png" id="2_hq17p"]
 [ext_resource type="Texture2D" uid="uid://4xtkpvelqdtn" path="res://Assets/Sprites/Tilesets/Test/TileSet0.png" id="3_o7vnn"]
 [ext_resource type="PackedScene" uid="uid://hab607seti3n" path="res://Scenes/Props/button_0.tscn" id="4_ifdpo"]
+[ext_resource type="PackedScene" uid="uid://cwov03gmrsasb" path="res://Scenes/Props/platform_0.tscn" id="5_hh8cf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hh8cf"]
 texture = ExtResource("2_hq17p")
@@ -86,3 +87,11 @@ tile_set = SubResource("TileSet_ifdpo")
 
 [node name="Button0" parent="." instance=ExtResource("4_ifdpo")]
 position = Vector2(825, -13)
+
+[node name="Platform0" parent="." instance=ExtResource("5_hh8cf")]
+position = Vector2(791, -33)
+
+[node name="Platform1" parent="." instance=ExtResource("5_hh8cf")]
+position = Vector2(753, -58)
+
+[connection signal="button_turned_on" from="Button0" to="." method="_on_button_0_button_turned_on"]
