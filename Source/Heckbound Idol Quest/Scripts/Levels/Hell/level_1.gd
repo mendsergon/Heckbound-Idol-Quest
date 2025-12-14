@@ -19,6 +19,11 @@ extends Node2D
 @onready var button_2: Node2D = $Puzzle2/Button2
 @onready var platform_7: StaticBody2D = $Puzzle2/Platform7
 
+# Puzzle 3
+@onready var button_3: Node2D = $Puzzle3/Button3
+@onready var platform_8: StaticBody2D = $Puzzle3/Platform8
+
+
 # Variables
 var player: Node2D = null
 var initial_camera_y: float = 0.0  # Store initial camera Y position
@@ -38,6 +43,7 @@ func _ready() -> void:
 	platform_5.disable()
 	platform_6.disable()
 	platform_7.enable()
+	platform_8.enable()
 	
 	# --------------------------------------------------------
 	# Wait a moment for player to be spawned by Main.gd
@@ -117,8 +123,16 @@ func _on_button_1_button_turned_on() -> void:
 
 func _on_button_2_button_turned_on() -> void:
 	# --------------------------------------------------------
-	# Toggle platforms when button is activated
+	# Toggle platform when button is activated
 	# --------------------------------------------------------
 	print("BUTTON PRESSED! Toggling platform")
 	platform_7.toggle()
 	
+
+
+func _on_button_3_button_turned_on() -> void:
+	# --------------------------------------------------------
+	# Toggle platform when button is activated
+	# --------------------------------------------------------
+	print("BUTTON PRESSED! Toggling platform")
+	platform_8.toggle()
